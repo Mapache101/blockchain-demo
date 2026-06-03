@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Ledger Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Blockchain Transaction Ledger</h1>
+        <div id="auth-status">
+            <span id="user-display">Not logged in</span>
+            <button id="auth-btn" class="btn-secondary">Login</button>
+        </div>
+    </header>
+
+    <main>
+        <div id="auth-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3 id="modal-title">Login</h3>
+                <input type="email" id="email-input" placeholder="Email" required>
+                <input type="password" id="password-input" placeholder="Password" required>
+                <div class="modal-actions">
+                    <button id="submit-auth-btn" class="btn-primary">Submit</button>
+                    <button id="close-modal-btn" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <section class="control-panel">
+                <div class="card box-actions hidden" id="box-panel">
+                    <h3>Box Control (Genesis Admin)</h3>
+                    <button id="mint-genesis-btn" class="btn-primary btn-full">Mint Genesis Block</button>
+                </div>
+
+                <div class="card user-actions hidden" id="transaction-panel">
+                    <h3>Transfer Tokens</h3>
+                    <form id="transfer-form">
+                        <label for="recipient-select">Recipient Account</label>
+                        <select id="recipient-select" required>
+                            <option value="">Select a user...</option>
+                        </select>
+                        
+                        <label for="amount-input">Amount</label>
+                        <input type="number" id="amount-input" min="1" placeholder="0" required>
+                        
+                        <button type="submit" class="btn-primary btn-full">Execute Transfer</button>
+                    </form>
+                </div>
+
+                <div class="card network-users">
+                    <div class="panel-header">
+                        <h3>Network Accounts</h3>
+                        <button id="create-account-btn" class="btn-small">Add Account</button>
+                    </div>
+                    <ul id="accounts-list">
+                        </ul>
+                </div>
+            </section>
+
+            <section class="ledger-panel">
+                <h3>Blockchain Ledger</h3>
+                <div id="blockchain-container">
+                    </div>
+            </section>
+        </div>
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
