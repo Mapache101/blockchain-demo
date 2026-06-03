@@ -37,7 +37,7 @@ const recipientSelect = document.getElementById('recipient-select');
 const transferForm = document.getElementById('transfer-form');
 const blockchainContainer = document.getElementById('blockchain-container');
 const mintGenesisBtn = document.getElementById('mint-genesis-btn');
-
+const amountInput = document.getElementById('amount-input');
 // --- Helper: SHA-256 Hashing ---
 async function generateHash(index, previousHash, timestamp, data) {
     const stringToHash = `${index}${previousHash}${timestamp}${JSON.stringify(data)}`;
