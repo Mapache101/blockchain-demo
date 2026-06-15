@@ -162,6 +162,32 @@ async function generateHash(index, previousHash, timestamp, data) {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
+// ---- Auth Mode Toggle ----
+const modeLoginBtn = document.getElementById('mode-login');
+const modeCreateBtn = document.getElementById('mode-create');
+const modeIndicator = document.querySelector('.mode-indicator');
+const submitBtnText = document.getElementById('submit-btn-text');
+
+function setAuthMode(mode) {
+    currentIsCreateMode = mode === 'create';
+    if (mode === 'create') {
+        modeCreateBtn?.classList.add('active');
+        modeLoginBtn?.classList.remove('active');
+        modeIndicator?.classList.add('create');
+        if (modalTitle) modalTitle.textContent = "NEW IDENTITY";
+        if (submitBtnText) submitBtnText.textContent = "CREATE IDENTITY";
+    } else {
+        modeLoginBtn?.classList.add('active');
+        modeCreateBtn?.classList.remove('active');
+        modeIndicator?.classList.remove('create');
+        if (modalTitle) modalTitle.textContent = "AUTHENTICATE";
+        if (submitBtnText) submitBtnText.textContent = "ESTABLISH LINK";
+    }
+}
+
+modeLoginBtn?.addEventListener('click', () => setAuthMode('login'));
+modeCreateBtn?.addEventListener('click', () => setAuthMode('create'));
+
 // ---- Auth Handling ----
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -209,15 +235,13 @@ authBtn.addEventListener('click', () => {
     if (currentUser) {
         signOut(auth);
     } else {
-        currentIsCreateMode = false;
-        if (modalTitle) modalTitle.textContent = "AUTHENTICATE";
+        setAuthMode('login');
         authModal?.classList.remove('hidden');
     }
 });
 
 createAccountBtn.addEventListener('click', () => {
-    currentIsCreateMode = true;
-    if (modalTitle) modalTitle.textContent = "NEW IDENTITY";
+    setAuthMode('create');
     authModal?.classList.remove('hidden');
 });
 

@@ -687,6 +687,56 @@ body {
     width: 100%;
 }
 
+
+/* ---- Auth Mode Toggle ---- */
+.auth-mode-toggle {
+    display: flex;
+    position: relative;
+    background: var(--bg-dark);
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: var(--space-xl);
+    border: 1px solid var(--border-subtle);
+}
+
+.mode-btn {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+    z-index: 2;
+    border-radius: 6px;
+}
+
+.mode-btn.active {
+    color: var(--neon-cyan);
+}
+
+.mode-indicator {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
+    background: var(--bg-hover);
+    border-radius: 6px;
+    border: 1px solid var(--border-glow);
+    transition: transform var(--transition-normal);
+    z-index: 1;
+}
+
+.mode-indicator.create {
+    transform: translateX(100%);
+}
+
 /* ---- Modal ---- */
 .modal {
     position: fixed;

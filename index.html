@@ -33,6 +33,11 @@
                 <p class="modal-subtitle">Secure Neural Link Required</p>
             </div>
             <div class="modal-body">
+                <div class="auth-mode-toggle">
+                    <button type="button" class="mode-btn active" data-mode="login" id="mode-login">LOGIN</button>
+                    <button type="button" class="mode-btn" data-mode="create" id="mode-create">NEW IDENTITY</button>
+                    <div class="mode-indicator"></div>
+                </div>
                 <div class="input-group">
                     <label for="email-input">IDENTITY TOKEN</label>
                     <input type="email" id="email-input" placeholder="user@neurochain.net" required>
@@ -46,7 +51,7 @@
             </div>
             <div class="modal-actions">
                 <button id="submit-auth-btn" class="btn-glow btn-primary">
-                    <span class="btn-text">ESTABLISH LINK</span>
+                    <span class="btn-text" id="submit-btn-text">ESTABLISH LINK</span>
                     <span class="btn-shimmer"></span>
                 </button>
                 <button id="close-modal-btn" class="btn-ghost">ABORT</button>
