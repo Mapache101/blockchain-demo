@@ -3,70 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blockchain Ledger Demo</title>
+    <title>NEUROCHAIN // Distributed Ledger Protocol</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<base target="_blank">
 </head>
 <body>
-    <header>
-        <h1>Blockchain Transaction Ledger</h1>
-        <div id="auth-status">
-            <span id="user-display">Not logged in</span>
-            <button id="auth-btn" class="btn-secondary">Login</button>
-        </div>
-    </header>
+    <!-- Scanline overlay -->
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
 
-    <main>
-        <div id="auth-modal" class="modal hidden">
-            <div class="modal-content">
-                <h3 id="modal-title">Login</h3>
-                <input type="email" id="email-input" placeholder="Email" required>
-                <input type="password" id="password-input" placeholder="Password" required>
-                <div class="modal-actions">
-                    <button id="submit-auth-btn" class="btn-primary">Submit</button>
-                    <button id="close-modal-btn" class="btn-secondary">Cancel</button>
+    <!-- Particle canvas background -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <h3 id="modal-title">AUTHENTICATE</h3>
+                <p class="modal-subtitle">Secure Neural Link Required</p>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="email-input">IDENTITY TOKEN</label>
+                    <input type="email" id="email-input" placeholder="user@neurochain.net" required>
+                    <div class="input-line"></div>
+                </div>
+                <div class="input-group">
+                    <label for="password-input">ACCESS KEY</label>
+                    <input type="password" id="password-input" placeholder="••••••••••••" required>
+                    <div class="input-line"></div>
                 </div>
             </div>
+            <div class="modal-actions">
+                <button id="submit-auth-btn" class="btn-glow btn-primary">
+                    <span class="btn-text">ESTABLISH LINK</span>
+                    <span class="btn-shimmer"></span>
+                </button>
+                <button id="close-modal-btn" class="btn-ghost">ABORT</button>
+            </div>
+            <div class="modal-corner tl"></div>
+            <div class="modal-corner tr"></div>
+            <div class="modal-corner bl"></div>
+            <div class="modal-corner br"></div>
         </div>
+    </div>
 
-        <div class="dashboard-grid">
-            <section class="control-panel">
-                <div class="card box-actions hidden" id="box-panel">
-                    <h3>Box Control (Genesis Admin)</h3>
-                    <button id="mint-genesis-btn" class="btn-primary btn-full">Mint Genesis Block</button>
+    <!-- Main Interface -->
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">NEUROCHAIN</span>
+                    <span class="brand-version">v2.4.1-alpha</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-label">PROTOCOL</span>
+                    <a href="#" class="nav-item active" data-panel="ledger">
+                        <span class="nav-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </span>
+                        <span class="nav-text">Ledger</span>
+                        <span class="nav-pulse"></span>
+                    </a>
+                    <a href="#" class="nav-item" data-panel="network">
+                        <span class="nav-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                        </span>
+                        <span class="nav-text">Network</span>
+                    </a>
                 </div>
 
-                <div class="card user-actions hidden" id="transaction-panel">
-                    <h3>Transfer Tokens</h3>
-                    <form id="transfer-form">
-                        <label for="recipient-select">Recipient Account</label>
-                        <select id="recipient-select" required>
-                            <option value="">Select a user...</option>
-                        </select>
-                        
-                        <label for="amount-input">Amount</label>
-                        <input type="number" id="amount-input" min="1" placeholder="0" required>
-                        
-                        <button type="submit" class="btn-primary btn-full">Execute Transfer</button>
-                    </form>
+                <div class="nav-section">
+                    <span class="nav-label">OPERATIONS</span>
+                    <a href="#" class="nav-item" data-panel="transfer">
+                        <span class="nav-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                <polyline points="17 6 23 6 23 12"></polyline>
+                            </svg>
+                        </span>
+                        <span class="nav-text">Transfer</span>
+                    </a>
+                    <a href="#" class="nav-item" data-panel="admin" id="admin-nav-item">
+                        <span class="nav-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </span>
+                        <span class="nav-text">Genesis Control</span>
+                        <span class="admin-badge">ADMIN</span>
+                    </a>
                 </div>
+            </nav>
 
-                <div class="card network-users">
+            <div class="sidebar-footer">
+                <div class="connection-status">
+                    <span class="status-dot online"></span>
+                    <span class="status-text">NODE ONLINE</span>
+                </div>
+                <div class="block-height">
+                    <span class="block-label">BLOCK HEIGHT</span>
+                    <span class="block-value" id="sidebar-block-count">0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="breadcrumb">
+                    <span class="bc-protocol">NEUROCHAIN</span>
+                    <span class="bc-separator">//</span>
+                    <span class="bc-page" id="current-page">LEDGER</span>
+                </div>
+                <div class="top-actions">
+                    <div class="user-chip" id="auth-status">
+                        <div class="user-avatar">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <span id="user-display">OFFLINE</span>
+                        <button id="auth-btn" class="btn-icon" title="Authenticate">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                                <polyline points="10 17 15 12 10 7"></polyline>
+                                <line x1="15" y1="12" x2="3" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Panels -->
+            <div class="content-area">
+                <!-- Ledger Panel -->
+                <div class="panel active" id="ledger-panel">
                     <div class="panel-header">
-                        <h3>Network Accounts</h3>
-                        <button id="create-account-btn" class="btn-small">Add Account</button>
+                        <div class="panel-title">
+                            <h2>BLOCKCHAIN LEDGER</h2>
+                            <p class="panel-desc">Immutable distributed transaction record</p>
+                        </div>
+                        <div class="panel-stats">
+                            <div class="stat-pill">
+                                <span class="stat-label">HASH POWER</span>
+                                <span class="stat-value">SHA-256</span>
+                            </div>
+                            <div class="stat-pill">
+                                <span class="stat-label">CONSENSUS</span>
+                                <span class="stat-value">PoW</span>
+                            </div>
+                        </div>
                     </div>
-                    <ul id="accounts-list">
-                        </ul>
-                </div>
-            </section>
 
-            <section class="ledger-panel">
-                <h3>Blockchain Ledger</h3>
-                <div id="blockchain-container">
+                    <div class="ledger-container" id="blockchain-container">
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                                </svg>
+                            </div>
+                            <h4>GENESIS REQUIRED</h4>
+                            <p>The distributed ledger awaits initialization. Mint the genesis block to establish the chain.</p>
+                            <button id="mint-genesis-btn" class="btn-glow btn-primary btn-large">
+                                <span class="btn-text">INITIALIZE GENESIS</span>
+                            </button>
+                        </div>
                     </div>
-            </section>
-        </div>
-    </main>
+                </div>
+
+                <!-- Network Panel -->
+                <div class="panel" id="network-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <h2>NETWORK NODES</h2>
+                            <p class="panel-desc">Active participants in the distributed consensus</p>
+                        </div>
+                        <div class="panel-actions">
+                            <button id="create-account-btn" class="btn-glow btn-secondary">
+                                <span class="btn-icon-svg">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    </svg>
+                                </span>
+                                <span class="btn-text">NEW NODE</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="network-visualization">
+                        <div class="network-ring" id="network-ring">
+                            <!-- Nodes will be positioned here dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="accounts-grid" id="accounts-list">
+                        <!-- Account cards rendered here -->
+                    </div>
+                </div>
+
+                <!-- Transfer Panel -->
+                <div class="panel" id="transfer-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <h2>VALUE TRANSFER</h2>
+                            <p class="panel-desc">Atomic transaction execution protocol</p>
+                        </div>
+                    </div>
+
+                    <div class="transfer-interface">
+                        <div class="transfer-visual">
+                            <div class="transfer-nodes">
+                                <div class="node sender-node">
+                                    <div class="node-ring"></div>
+                                    <div class="node-core">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="12" cy="7" r="4"></circle>
+                                        </svg>
+                                    </div>
+                                    <span class="node-label" id="sender-label">ORIGIN</span>
+                                </div>
+
+                                <div class="transfer-beam">
+                                    <div class="beam-line"></div>
+                                    <div class="beam-particles"></div>
+                                </div>
+
+                                <div class="node recipient-node">
+                                    <div class="node-ring"></div>
+                                    <div class="node-core">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                            <circle cx="12" cy="7" r="4"></circle>
+                                        </svg>
+                                    </div>
+                                    <span class="node-label" id="recipient-label">TARGET</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="transfer-form-container">
+                            <form id="transfer-form" class="futuristic-form">
+                                <div class="form-row">
+                                    <div class="input-group floating">
+                                        <label for="recipient-select">TARGET NODE</label>
+                                        <select id="recipient-select" required>
+                                            <option value="">Select target...</option>
+                                        </select>
+                                        <div class="input-glow"></div>
+                                    </div>
+
+                                    <div class="input-group floating">
+                                        <label for="amount-input">TRANSFER AMOUNT</label>
+                                        <input type="number" id="amount-input" min="1" placeholder="0.00" required>
+                                        <span class="input-suffix">TOKENS</span>
+                                        <div class="input-glow"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn-glow btn-primary btn-large btn-full">
+                                        <span class="btn-text">EXECUTE TRANSFER</span>
+                                        <span class="btn-shimmer"></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Panel -->
+                <div class="panel" id="admin-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <h2>GENESIS CONTROL</h2>
+                            <p class="panel-desc">System administration and chain initialization</p>
+                        </div>
+                        <div class="admin-badge-large">ROOT ACCESS</div>
+                    </div>
+
+                    <div class="admin-dashboard">
+                        <div class="admin-card">
+                            <div class="admin-card-icon">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                    <polyline points="2 17 12 22 22 17"></polyline>
+                                    <polyline points="2 12 12 17 22 12"></polyline>
+                                </svg>
+                            </div>
+                            <h4>Initialize Genesis</h4>
+                            <p>Mint the foundational block with 10,000 tokens to the system treasury.</p>
+                            <button id="admin-mint-btn" class="btn-glow btn-primary btn-full">
+                                <span class="btn-text">MINT GENESIS BLOCK</span>
+                            </button>
+                        </div>
+
+                        <div class="admin-stats">
+                            <div class="admin-stat">
+                                <span class="admin-stat-value" id="admin-block-count">0</span>
+                                <span class="admin-stat-label">BLOCKS</span>
+                            </div>
+                            <div class="admin-stat">
+                                <span class="admin-stat-value" id="admin-tx-count">0</span>
+                                <span class="admin-stat-label">TRANSACTIONS</span>
+                            </div>
+                            <div class="admin-stat">
+                                <span class="admin-stat-value" id="admin-node-count">0</span>
+                                <span class="admin-stat-label">NODES</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <script type="module" src="app.js"></script>
 </body>
